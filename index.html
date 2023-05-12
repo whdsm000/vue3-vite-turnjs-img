@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>index</title>
+  </head>
+  <body>
+    <button onclick="clickEvt('wty')">万图云</button>
+    <button onclick="clickEvt('zjd')">宅基地</button>
+    <button onclick="clickEvt('gd')">耕地</button>
+    <button onclick="clickEvt('wtny')">万图农业</button>
+    <script>
+        function clickEvt(name) {
+            window.open(`/turnpage.html?name=${name}`)
+        }
+    </script>
+  </body>
+</html>
