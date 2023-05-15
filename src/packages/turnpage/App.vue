@@ -31,68 +31,46 @@ useHead({
     },
   ],
 })
-
 const gdImgs = import.meta.glob('./assets/gd/*.jpg', { eager: true })
 const gdLength = Object.keys(gdImgs).length
-
 const wty = import.meta.glob('./assets/wty/*.png', { eager: true })
 const wtyLength = Object.keys(wty).length
-
 const wtny = import.meta.glob('./assets/wtny/*.png', { eager: true })
 const wtnyLength = Object.keys(wtny).length
-
 const zjd = import.meta.glob('./assets/zjd/*.png', { eager: true })
 const zjdLength = Object.keys(zjd).length
-
 const maxLength = ref(0)
-
 maxLength.value = name === 'gd' ? gdLength :
   name === 'wty' ? wtyLength :
     name === 'wtny' ? wtnyLength :
       name === 'zjd' ? zjdLength : 0;
 const initLength = toRaw(maxLength.value)
 maxLength.value % 2 === 0 ? maxLength.value : maxLength.value++
-
-
 const suffix_name = name === 'gd' ? 'jpg' : 'png'
 function getImg(i: number):string {
-
   const index = i < 10 ? `0${i}` : i;
-
   if (index > initLength) {
     return new URL(`./assets/cover.png`, import.meta.url) as any as string;
   }
-
   const url = new URL(`./assets/${name}/page_-${index}.${suffix_name}`, import.meta.url);
   return url as any as string;
 }
 const currentPage = ref(1)
-
 //监听url变化
 addEventListener('hashchange', function () {
   const hash = location.hash
   const page = hash.split('/')[1]
     if(!Number(page)) return
-   
-    if(Number(page)>maxLength.value){
-    
-      
+    if(Number(page)>maxLength.value){    
       currentPage.value=maxLength.value
-     
       return
     }
     if(Number(page)<0){
       currentPage.value=1
       return
     }
-  
-
     currentPage.value = Number(page)
-  
-
 })
-
-
 onMounted(() => {
   //判断class为double胡元素有没有子元素,如果没有则删除
   const double = $('.double')
@@ -101,50 +79,29 @@ onMounted(() => {
       item.remove()
     }
   })
-
-
   $('.flipbook').turn({
     // Width
-
     width: 922,
-
     // Height
-
     height: 600,
-
     // Elevation
-
     elevation: 50,
-
     // Enable gradients
-
     gradients: true,
-
     // Auto center this flipbook
-
     autoCenter: true,
-
-
     when: {
       turning: function (event: any, page: string, view: any) {
         var book = $(this)
-
         const currentPage = book.turn('page')
         const pages = book.turn('pages');
-
-
-
         Hash.go('page/' + page).update();
-
-
         $('.thumbnails .page-' + currentPage).
           parent().
           removeClass('current');
-
         $('.thumbnails .page-' + page).
           parent().
           addClass('current');
-
         const container = document.querySelector('.t_container')
         const currentThumbnail = document.querySelector('.current')! as HTMLDivElement
         const containerWidth = container!.clientWidth
@@ -152,62 +109,42 @@ onMounted(() => {
         const thumbnailLeft = currentThumbnail.offsetLeft
         container!.scrollLeft = thumbnailLeft - (containerWidth - thumbnailWidth) / 2
       },
-
     }
   })
   $(".flipbook").turn("zoom", 1.3);
-
-
   $('.thumbnails').click(function (event: { target: any; }) {
-
     let page;
-
-
     //给event.target的上层div添加class，其余移除class
     if (event.target && (page = /page-([0-9]+)/.exec($(event.target).attr('class')))) {
       $('.flipbook').turn('page', page[1]);
     }
-
   });
   $('.thumbnails div').
     bind($.mouseEvents.over, function () {
       $((this)).addClass('thumb-hover');
     }).bind($.mouseEvents.out, function () {
       $(this).removeClass('thumb-hover');
-
     });
   if ($.isTouch) {
-
     $('.thumbnails').
       addClass('thumbanils-touch').
       bind($.mouseEvents.move, function (event: { preventDefault: () => void; }) {
         event.preventDefault();
       });
-
   } else {
-
     $('.thumbnails div').mouseover(function () {
-
       $('.thumbnails').addClass('thumbnails-hover');
-
     }).mousedown(function () {
-
       return false;
-
     }).mouseout(function () {
-
       $('.thumbnails').removeClass('thumbnails-hover');
-
     });
-
   }
  Hash.on('^page\/([0-9]*)$', {
     yep: function (path: any, parts: any[]) {
       var page = parts[1];
       if(!Number(page)) return
-      if(Number(page)>maxLength.value){
-      
-        
+      if(Number(page)>maxLength.value){       
         if ($('.flipbook').turn('is'))
           $('.flipbook').turn('page', maxLength.value);
        
@@ -220,35 +157,24 @@ onMounted(() => {
       }
       if ($('.flipbook').turn('is'))
         $('.flipbook').turn('page', Number(page));
-
     },
-    nop: function (path: any) {
-
-     
-      
+    nop: function (path: any) {      
       if ($('.flipbook').turn('is'))
         $('.flipbook').turn('page', 1);
         currentPage.value = 1
-
     }
   });
   $(document).keydown(function (e: { keyCode: any; }) {
-
     var previous = 37, next = 39;
-
     switch (e.keyCode) {
       case previous:
-
         $('.flipbook').turn('previous');
         break
       case next:
-
         $('.flipbook').turn('next');
         break;
     }
-
   });
-
 })
 function style(i: number) {
   const url = getImg(i)
@@ -262,7 +188,6 @@ const isDark = useDark()
 const toggleDark = () => {
   isDark.value = !isDark.value
 }
-
 function pageChange(type: string) {
   switch (type) {
     case 'pre':
@@ -274,9 +199,6 @@ function pageChange(type: string) {
   }
 }
 function goEvt() {
-
-
-
   //判断currentPage是否为数字
   if (!isNaN(Number(currentPage.value))) {
     if (Number(currentPage.value) < 0) {
@@ -293,40 +215,29 @@ function goEvt() {
     currentPage.value = 1
   }
 }
-
-
-
 function requestFullscreen(fullscreenDiv: HTMLDivElement) {
-
-
   if (fullscreenDiv.requestFullscreen) {
     fullscreenDiv.requestFullscreen();
   }
 }
-
 function exitFullscreen() {
   if (document.exitFullscreen) {
     document.exitFullscreen();
   }
 }
 function screen(type: 'full' | 'exit') {
-
   switch (type) {
     case 'full':
       const fullscreenDiv = document.getElementsByClassName("flipbook-viewport")[0]
       requestFullscreen(fullscreenDiv as HTMLDivElement)
-
-
       break;
     case 'exit':
       exitFullscreen()
-
       break;
   }
 }
 const isFullscreen = ref(false)
 //禁止F11进入全屏
-
 document.addEventListener("keydown", function (event) {
   if (event.keyCode == 122) {
     event.preventDefault();
@@ -337,25 +248,18 @@ const flipbook_left=ref('20%')
 //监听页面是否全屏
 document.addEventListener("fullscreenchange", function () {
   if (document.fullscreenElement) {
-
     isFullscreen.value = true
     isDark.value = true
-
     $('.flipbook').turn('zoom', 1.6)
-
     flipbook_left.value='12%'
-
   } else {
-
     isFullscreen.value = false
     isDark.value = false
     $('.flipbook').turn('zoom', 1.3)
     flipbook_left.value='20%'
   }
 });
-
 </script>
-
 <template>
   <nav inline-flex gap-2 text-xl class="absolute right-10px top-12px z-999">
     <button icon-btn class="bg-white dark:bg-black dark:text-white border-none" @click="toggleDark">
@@ -370,7 +274,6 @@ document.addEventListener("fullscreenchange", function () {
     </div>
     <div class="depth"></div>
     <div class="thumbnails">
-
       <div class="t_container">
         <div v-for="i in maxLength" :key="i" :class="[i === 1 || i === maxLength ? 'single' : 'double']">
           <template v-if="i === 1 || i === maxLength">
@@ -387,9 +290,7 @@ document.addEventListener("fullscreenchange", function () {
         </div>
       </div>
     </div>
-
     <div class="absolute  right-120px top-5px z-999 flex items-center">
-
       <span mr-10px dark:text-white>总计：{{ maxLength }}页</span>
       <button icon-btn class="bg-white dark:bg-black dark:text-white border-none w-40px h-40px"
         @click="pageChange('pre')">
@@ -418,7 +319,6 @@ document.addEventListener("fullscreenchange", function () {
       @click="pageChange('next')">
       <div i-carbon:next-filled text-size="40px"></div>
     </button>
-
   </div>
 </template>
 
